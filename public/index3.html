@@ -1,0 +1,1046 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>USTP EchoWall – Learn from the Past, Guide the Future</title>
+  <meta name="description" content="USTP EchoWall - A student-only platform to share academic documents and reflections for USTP students." />
+
+  <!-- USTP color palette -->
+  <style>
+    :root{
+      --ustp-blue: #0b3d91;    /* deep USTP blue */
+      --ustp-gold: #f2b705;    /* gold */
+      --accent: #2e77d0;       /* lighter blue for accents */
+      --bg: #ffffff;
+      --muted: #6b7280;
+      --card: #f8fafc;
+      --glass: rgba(255,255,255,0.85);
+      --shadow: 0 6px 20px rgba(11,61,145,0.08);
+      --radius: 12px;
+      --max-width: 1200px;
+      --focus: 3px solid rgba(11,61,145,0.12);
+      --mobile-gap: 1rem;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* Reset-ish */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#f6f9ff 0%, #ffffff 100%);
+      color:#0f1724;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      font-size:16px;
+      padding-bottom: 4rem;
+    }
+
+    a{color:var(--ustp-blue); text-decoration:none}
+    a:focus{outline:var(--focus); border-radius:8px}
+    img{max-width:100%; display:block; height:auto}
+
+    /* Container */
+    .container{
+      width:100%;
+      max-width: var(--max-width);
+      margin:0 auto;
+      padding:1rem;
+    }
+
+    header.site-header{
+      background: linear-gradient(90deg, rgba(11,61,145,0.96) 0%, rgba(46,119,208,0.9) 100%);
+      color: #fff;
+      position:sticky;
+      top:0;
+      z-index:100;
+      box-shadow: 0 4px 18px rgba(11,61,145,0.15);
+      backdrop-filter: blur(6px);
+    }
+    .site-header .container{
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      padding:1rem;
+      justify-content:space-between;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+    }
+    .brand .logo{
+      width:48px;height:48px;border-radius:10px;
+      background:linear-gradient(135deg,var(--ustp-gold),#ffd77a);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;color:var(--ustp-blue);font-size:18px;
+      box-shadow: 0 6px 18px rgba(11,61,145,0.12);
+    }
+    .brand h1{font-size:18px;margin:0;line-height:1}
+    nav.top-nav{display:flex;gap:0.5rem;align-items:center;}
+    nav.top-nav a{color:#fff;padding:.45rem .6rem;border-radius:8px;font-weight:600}
+    nav.top-nav a:hover{background:rgba(255,255,255,0.06)}
+    .header-actions{display:flex;gap:.5rem;align-items:center}
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      background:var(--ustp-blue);
+      color:#fff;
+      border-radius:10px;
+      padding:.6rem .85rem;
+      border:0;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow:var(--shadow);
+      transition:transform .12s ease, box-shadow .12s ease, opacity .12s;
+    }
+    .btn.secondary{
+      background:transparent;
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.16);
+    }
+    .btn.ghost{background:transparent;color:#fff;border:1px dashed rgba(255,255,255,0.12)}
+    .btn:active{transform:translateY(1px)}
+    .btn:focus{outline:var(--focus)}
+    .btn.small{padding:.4rem .6rem;font-size:14px;border-radius:8px}
+    .login-btn{background:var(--ustp-gold); color:var(--ustp-blue); font-weight:700}
+
+    /* Hero */
+    .hero{
+      margin-top:1rem;
+      border-radius:14px;
+      overflow:hidden;
+      position:relative;
+      color:#fff;
+    }
+    .hero__bg{
+      background-image: url('https://via.placeholder.com/1600x900.png?text=USTP+Campus+%7C+EchoWall');
+      background-size:cover;
+      background-position:center;
+      min-height:380px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(11,61,145,0.42), rgba(11,61,145,0.82));
+      pointer-events:none;
+    }
+    .hero-inner{
+      position:relative;
+      z-index:2;
+      padding:2.25rem 1rem;
+      width:100%;
+      max-width:1100px;
+      margin:0 auto;
+      display:flex;
+      gap:1.25rem;
+      align-items:center;
+      justify-content:space-between;
+      color:#fff;
+    }
+    .hero-copy{flex:1; min-width:220px}
+    .hero h2{
+      margin:0 0 .4rem 0;
+      font-size:clamp(20px, 3.4vw, 34px);
+      letter-spacing: -0.02em;
+    }
+    .hero p.tagline{
+      margin:0 0 1rem 0;
+      font-weight:600;
+      color:rgba(255,255,255,0.92);
+    }
+    .hero-ctas{display:flex;gap:.6rem;flex-wrap:wrap}
+    .hero-card{
+      background: rgba(255,255,255,0.06);
+      padding:.8rem;
+      border-radius:12px;
+      display:flex;
+      gap:.6rem;
+      align-items:center;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.18);
+    }
+    .hero-card small{color:#eef3ff;display:block;font-weight:600}
+
+    /* Showcase grid */
+    main{padding:1rem}
+    section.block{
+      margin:1.25rem 0;
+      background:var(--glass);
+      border-radius:14px;
+      padding:1rem;
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+    .section-head{
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      justify-content:space-between;
+      margin-bottom:.75rem;
+    }
+    .section-head h3{margin:0;font-size:1.1rem;color:var(--ustp-blue)}
+    .section-head p.small{margin:0;color:var(--muted);font-size:0.95rem}
+
+    /* Document archive */
+    .archive-controls{
+      display:flex;
+      gap:.5rem;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .search{
+      display:flex;
+      gap:.5rem;
+      align-items:center;
+      background:#fff;border-radius:10px;padding:.4rem .6rem;
+      box-shadow:0 2px 10px rgba(2,6,23,0.04);
+      min-width:220px;
+    }
+    .search input{
+      border:0;outline:0;font-size:14px;background:transparent;
+      min-width:160px;
+    }
+    .filters{
+      display:flex;
+      gap:.5rem;
+      align-items:center;
+    }
+    .select{
+      background:#fff;border-radius:10px;padding:.45rem .6rem;border:0;
+      box-shadow:0 2px 10px rgba(2,6,23,0.04);
+      font-weight:600;
+    }
+
+    /* Tabs */
+    .tabs{display:flex;gap:.5rem;align-items:center}
+    .tab{
+      padding:.5rem .75rem;border-radius:10px;background:transparent;border:1px solid rgba(11,61,145,0.06);cursor:pointer;font-weight:700;color:var(--ustp-blue)
+    }
+    .tab.active{background:var(--ustp-blue);color:#fff;box-shadow:0 6px 18px rgba(11,61,145,0.12)}
+
+    /* Grid */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:1rem;
+    }
+    .card{
+      background:#fff;border-radius:12px;padding:.9rem;border:1px solid rgba(11,61,145,0.04);
+      box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+    }
+    .doc-thumb{
+      height:120px;border-radius:8px;background:linear-gradient(180deg,#e9f0ff,#fff);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ustp-blue);margin-bottom:.6rem;
+    }
+    .meta{display:flex;justify-content:space-between;gap:.5rem;align-items:center;font-size:13px;color:var(--muted)}
+    .doc-title{font-weight:700;color:var(--ustp-blue);margin:0 0 .4rem 0}
+    .doc-desc{font-size:13px;color:#475569;margin:0 0 .45rem 0}
+    .doc-actions{display:flex;gap:.4rem;align-items:center}
+    .pill{padding:.35rem .6rem;border-radius:999px;background:var(--card);font-weight:700;color:var(--ustp-blue);font-size:13px}
+
+    /* Experience wall (carousel/feed) */
+    .experience{
+      display:flex;
+      gap:1rem;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+    .feed{
+      flex:1.25;
+      min-width:240px;
+    }
+    .carousel{
+      position:relative;
+      overflow:hidden;
+      border-radius:12px;
+      background:#fff;
+      padding:1rem;
+      min-height:220px;
+    }
+    .post{
+      display:flex;
+      gap:0.75rem;
+      align-items:flex-start;
+    }
+    .avatar{
+      width:48px;height:48px;border-radius:50%;
+      background:linear-gradient(135deg,var(--ustp-blue),var(--accent));
+      color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;
+      flex-shrink:0;
+    }
+    .post-body{flex:1}
+    .post-body h4{margin:0 0 .2rem 0;font-size:15px;color:var(--ustp-blue)}
+    .post-body p{margin:0;color:#374151}
+    .post-meta{font-size:12px;color:var(--muted);margin-top:.5rem}
+
+    .carousel-controls{
+      display:flex;
+      gap:.4rem;
+      position:absolute;
+      right:1rem;
+      top:1rem;
+    }
+    .carousel-controls button{
+      background:rgba(11,61,145,0.06);border:0;padding:.45rem;border-radius:8px;cursor:pointer;
+    }
+
+    .categories{
+      display:flex;
+      gap:.4rem;flex-wrap:wrap;
+    }
+    .category{padding:.4rem .6rem;border-radius:8px;background:#fff;border:1px solid rgba(11,61,145,0.06);font-weight:700;color:var(--ustp-blue)}
+
+    .post-form{
+      margin-top:.8rem;
+      background:linear-gradient(180deg,#fff,#f8fbff);
+      border-radius:10px;padding:.8rem;border:1px solid rgba(11,61,145,0.04)
+    }
+    .form-row{display:flex;gap:.5rem;flex-wrap:wrap}
+    .form-row input[type="text"], .form-row select, .form-row textarea{
+      flex:1;padding:.6rem;border-radius:8px;border:1px solid rgba(11,61,145,0.06)
+    }
+    .form-row textarea{min-height:90px;resize:vertical}
+    .anon-toggle{display:flex;gap:.5rem;align-items:center;font-weight:700}
+
+    /* Starter packs */
+    .packs{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .pack{background:#fff;border-radius:12px;padding:1rem;border:1px solid rgba(11,61,145,0.04)}
+    .pack h4{margin:0 0 .4rem 0}
+    .bundle-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.35rem}
+    .bundle-list li{font-size:14px;color:#313131}
+
+    /* Community highlights */
+    .highlights{display:flex;gap:1rem;flex-wrap:wrap}
+    .highlight-card{flex:1;min-width:220px;background:#fff;padding:1rem;border-radius:12px;border:1px solid rgba(11,61,145,0.04)}
+    .badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem .6rem;background:var(--ustp-gold);color:var(--ustp-blue);border-radius:999px;font-weight:800}
+
+    /* Notice */
+    .notice{background:#fff7e6;color:#513401;padding:1rem;border-radius:10px;border:1px solid rgba(245,166,35,0.14);display:flex;gap:.75rem;align-items:center}
+
+    /* Footer */
+    footer.site-footer{margin-top:1.25rem}
+    .footer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .footer-card{background:transparent;color:var(--muted)}
+    .socials{display:flex;gap:.5rem;align-items:center}
+    .small{font-size:13px;color:var(--muted)}
+
+    /* Login/signup modal */
+    .modal{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.5);z-index:500;
+    }
+    .modal.open{display:flex}
+    .modal-card{width:100%;max-width:520px;background:#fff;border-radius:12px;padding:1rem;box-shadow:0 30px 80px rgba(2,6,23,0.35)}
+    .close-btn{background:transparent;border:0;font-weight:900;color:var(--muted);cursor:pointer}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .grid{grid-template-columns:repeat(2,1fr)}
+      .packs{grid-template-columns:repeat(2,1fr)}
+      .footer-grid{grid-template-columns:repeat(2,1fr)}
+      .hero-inner{flex-direction:column;align-items:flex-start}
+    }
+    @media (max-width:640px){
+      .grid{grid-template-columns:1fr}
+      .packs{grid-template-columns:1fr}
+      .hero__bg{min-height:380px}
+      .container{padding:.8rem}
+      .site-header .container{padding:.6rem}
+      nav.top-nav{display:none}
+      .header-actions{gap:.35rem}
+      header.site-header{position:relative}
+      .footer-grid{grid-template-columns:1fr}
+      .hero-card{width:100%}
+    }
+
+    /* Utility */
+    .muted{color:var(--muted)}
+    .center{text-align:center}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <div class="brand" aria-label="USTP EchoWall">
+        <div class="logo" aria-hidden="true">E</div>
+        <div>
+          <h1>USTP EchoWall</h1>
+          <div class="small">Learn from the Past, Guide the Future</div>
+        </div>
+      </div>
+
+      <nav class="top-nav" role="navigation" aria-label="Primary">
+        <a href="#archive">Archive</a>
+        <a href="#experience">Experience Wall</a>
+        <a href="#packs">Starter Packs</a>
+        <a href="#community">Community</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn secondary small" id="btnBrowse" onclick="scrollToId('archive')">Browse Resources</button>
+        <button class="btn ghost small" id="btnShare" onclick="scrollToId('experience')">Share Your Experience</button>
+        <button class="btn login-btn small" id="openLogin">Contribute</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero__bg" role="img" aria-label="USTP Campus background image">
+      <div class="hero-inner container">
+        <div class="hero-copy">
+          <h2>USTP EchoWall – Learn from the Past, Guide the Future</h2>
+          <p class="tagline">Powered by students. Built for students.</p>
+
+          <div class="hero-ctas" role="group" aria-label="Call to actions">
+            <button class="btn" id="ctaBrowse" onclick="scrollToId('archive')">Browse Resources</button>
+            <button class="btn secondary" id="ctaShare" onclick="scrollToId('experience')">Share Your Experience</button>
+          </div>
+
+          <div style="margin-top:1rem" class="hero-card" aria-hidden="true">
+            <div>
+              <small>Student-only • Verified USTP accounts required to contribute</small>
+              <div class="small muted">Explore syllabi, reviewers, professor notes, and first-hand advice.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="width:380px;max-width:45%;" class="hero-side center" aria-hidden="true">
+          <!-- sample quick stats -->
+          <div style="background:rgba(255,255,255,0.06);padding:1rem;border-radius:12px;">
+            <div style="display:flex;gap:.6rem;align-items:center;justify-content:center;margin-bottom:.5rem">
+              <div class="pill">+2.3k Docs</div>
+              <div class="pill">+4.7k Posts</div>
+            </div>
+            <div class="small">New this week: <strong>120</strong> uploads • Top faculty: <strong>Dr. Reyes</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container" id="main">
+
+    <!-- Document Archive Preview -->
+    <section id="archive" class="block" aria-labelledby="archive-heading">
+      <div class="section-head">
+        <div>
+          <h3 id="archive-heading">📁 Document Archive Preview</h3>
+          <p class="small">Browse shared academic resources uploaded by USTP students. Filter by course, professor, and department.</p>
+        </div>
+        <div class="archive-controls" role="toolbar" aria-label="Archive controls">
+          <div class="search" role="search" aria-label="Search documents">
+            <svg width="18" height="18" fill="none" aria-hidden="true"><path d="M11.5 11.5l5 5" stroke="#0b3d91" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="searchInput" type="search" placeholder="Search by title or course code" aria-label="Search documents" />
+          </div>
+
+          <div class="filters" role="group" aria-label="Filters">
+            <select id="filterCourse" class="select" aria-label="Filter by course">
+              <option value="">All Courses</option>
+              <option value="BSIT">BSIT</option>
+              <option value="BSME">BSME</option>
+              <option value="BSCE">BSCE</option>
+              <option value="BSA">BSA</option>
+            </select>
+
+            <select id="filterProfessor" class="select" aria-label="Filter by professor">
+              <option value="">All Professors</option>
+              <option value="Dr. Reyes">Dr. Reyes</option>
+              <option value="Prof. Santos">Prof. Santos</option>
+              <option value="Engr. Lim">Engr. Lim</option>
+            </select>
+
+            <select id="filterDept" class="select" aria-label="Filter by department">
+              <option value="">All Departments</option>
+              <option value="CE">College of Engineering</option>
+              <option value="CS">College of Computer Studies</option>
+              <option value="AS">College of Arts & Sciences</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <div class="tabs" role="tablist" aria-label="Document list tabs">
+          <button class="tab active" role="tab" aria-selected="true" data-tab="top">Top Downloads</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="recent">Recently Added</button>
+        </div>
+
+        <div class="small muted">Showing <strong id="resultCount">6</strong> results</div>
+      </div>
+
+      <div id="archiveGrid" class="grid" aria-live="polite">
+        <!-- Sample document cards (placeholders) -->
+        <!-- We'll generate these with JS to ensure enough content -->
+      </div>
+
+    </section>
+
+    <!-- Experience Wall Preview -->
+    <section id="experience" class="block" aria-labelledby="experience-heading">
+      <div class="section-head">
+        <div>
+          <h3 id="experience-heading">🗣️ Experience Wall Preview</h3>
+          <p class="small">Reflections and advice from current students — post anonymously if you prefer.</p>
+        </div>
+
+        <div>
+          <div class="categories" role="list" aria-label="Experience categories">
+            <div class="category" role="listitem">Freshman Tips</div>
+            <div class="category" role="listitem">Prof Advice</div>
+            <div class="category" role="listitem">Dorm Life</div>
+            <div class="category" role="listitem">Exam Survival</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="experience">
+        <div class="feed" aria-live="polite">
+          <div class="carousel" id="carousel" aria-roledescription="carousel" aria-label="Student posts carousel">
+            <div class="carousel-inner" id="carouselInner">
+              <!-- posts inserted by JS -->
+            </div>
+
+            <div class="carousel-controls" aria-hidden="false">
+              <button id="prevBtn" aria-label="Previous post">‹</button>
+              <button id="nextBtn" aria-label="Next post">›</button>
+            </div>
+          </div>
+
+          <div class="post-form" aria-label="Share your experience">
+            <form id="postForm" onsubmit="return submitPost(event)">
+              <div class="form-row">
+                <input type="text" id="postTitle" placeholder="Title (e.g., 'How to survive midterms')" aria-label="Post title" required />
+                <select id="postCategory" aria-label="Post category">
+                  <option value="Freshman Tips">Freshman Tips</option>
+                  <option value="Prof Advice">Prof Advice</option>
+                  <option value="Dorm Life">Dorm Life</option>
+                  <option value="Exam Survival">Exam Survival</option>
+                </select>
+              </div>
+
+              <div style="margin-top:.6rem" class="form-row">
+                <textarea id="postBody" placeholder="Share your experience or advice..." aria-label="Post body" required></textarea>
+              </div>
+
+              <div style="margin-top:.6rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem">
+                <div class="anon-toggle">
+                  <input type="checkbox" id="postAnon" />
+                  <label for="postAnon">Post anonymously</label>
+                </div>
+
+                <div style="display:flex;gap:.5rem;">
+                  <button class="btn small" type="submit">Post</button>
+                  <button type="button" class="btn small secondary" onclick="resetPostForm()">Clear</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <aside style="flex:.6;min-width:220px">
+          <div class="block" style="padding:.75rem;">
+            <h4 style="margin:0 0 .5rem 0">Post Categories</h4>
+            <p class="small muted">Browse by tag or submit your own insights to help freshmen.</p>
+            <div style="margin-top:.6rem;display:flex;flex-wrap:wrap;gap:.5rem">
+              <button class="tab" data-filter="Freshman Tips" onclick="filterPosts('Freshman Tips')">Freshman Tips</button>
+              <button class="tab" data-filter="Prof Advice" onclick="filterPosts('Prof Advice')">Prof Advice</button>
+              <button class="tab" data-filter="Dorm Life" onclick="filterPosts('Dorm Life')">Dorm Life</button>
+              <button class="tab" data-filter="Exam Survival" onclick="filterPosts('Exam Survival')">Exam Survival</button>
+              <button class="tab" data-filter="" onclick="filterPosts('')">Show All</button>
+            </div>
+          </div>
+
+          <div class="block" style="margin-top:1rem;padding:.75rem;">
+            <h4 style="margin:0 0 .5rem 0">Posting Guidelines</h4>
+            <ul class="small muted">
+              <li>Keep it respectful & constructive.</li>
+              <li>No sharing of personally-identifying info.</li>
+              <li>Academic integrity always — do not share solutions that violate policies.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Freshman Starter Packs -->
+    <section id="packs" class="block" aria-labelledby="packs-heading">
+      <div class="section-head">
+        <div>
+          <h3 id="packs-heading">🎓 Freshman Starter Packs</h3>
+          <p class="small">Curated bundles with sample syllabi, reviewers, and advice posts for each major.</p>
+        </div>
+      </div>
+
+      <div class="packs" id="packsGrid" aria-live="polite">
+        <!-- Packs inserted by JS -->
+      </div>
+
+    </section>
+
+    <!-- Community Highlights -->
+    <section id="community" class="block" aria-labelledby="community-heading">
+      <div class="section-head">
+        <div>
+          <h3 id="community-heading">🎖️ Community Highlights</h3>
+          <p class="small">Recognizing contributors who help build EchoWall.</p>
+        </div>
+        <div class="small muted">Updated monthly • Top-rated resources & contributors</div>
+      </div>
+
+      <div class="highlights">
+        <div class="highlight-card">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div class="badge" aria-hidden="true">🏅 Most Helpful Contributor</div>
+              <div style="margin-top:.5rem;font-weight:800">Juan Dela Cruz</div>
+              <div class="small muted">150 contributions • 4.9★ avg</div>
+            </div>
+
+            <div style="text-align:right">
+              <div class="small muted">Since</div>
+              <div style="font-weight:700">Aug 2023</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-card">
+          <h4 style="margin-top:0">Top Rated Resources</h4>
+          <ol style="margin:0;padding-left:1rem">
+            <li><strong>BSIT Data Structures Reviewer</strong> — 4.9★</li>
+            <li><strong>BSME Thermo Notes</strong> — 4.8★</li>
+            <li><strong>BSCE Calc II Syllabus</strong> — 4.7★</li>
+          </ol>
+        </div>
+
+        <div class="highlight-card">
+          <h4 style="margin-top:0">Recent Kudos</h4>
+          <div class="small muted">Students often thank contributors for clarifying exam trends and professor hints.</div>
+          <ul style="margin-top:.6rem">
+            <li>“Saved my sem!” — Ana</li>
+            <li>“Super organized” — Mark</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Academic Integrity Notice -->
+    <section class="block" aria-labelledby="integrity-heading">
+      <div class="section-head">
+        <div>
+          <h3 id="integrity-heading">🛡️ Academic Integrity Notice</h3>
+          <p class="small">A gentle reminder about ethical use of shared materials.</p>
+        </div>
+      </div>
+
+      <div class="notice" role="alert">
+        <div style="font-size:24px">⚖️</div>
+        <div>
+          <div style="font-weight:800">Use shared materials responsibly</div>
+          <div class="small muted">The EchoWall is for study support and orientation. Do not submit or reuse materials in a way that violates USTP's academic honesty policy.</div>
+          <div style="margin-top:.4rem">
+            <a href="#" target="_blank" rel="noopener" aria-label="U S T P academic honesty policy">Read USTP's academic honesty policy</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer container" role="contentinfo">
+    <div class="footer-grid">
+      <div class="footer-card">
+        <h4>Contact</h4>
+        <div class="small muted">USTP EchoWall Team</div>
+        <div class="small">echo.wall@ustp.edu.ph</div>
+        <div class="small">(0999) 123-4567</div>
+      </div>
+
+      <div class="footer-card">
+        <h4>Student Org Partners</h4>
+        <ul style="list-style:none;padding-left:0;margin:0">
+          <li class="small">USTP ICS Student Council</li>
+          <li class="small">Mechanical Engr Society</li>
+          <li class="small">Civil Engr Guild</li>
+        </ul>
+      </div>
+
+      <div class="footer-card">
+        <h4>Follow</h4>
+        <div class="socials">
+          <a class="small" href="#" aria-label="EchoWall Facebook">Facebook</a>
+          <a class="small" href="#" aria-label="EchoWall Twitter">Twitter</a>
+          <a class="small" href="#" aria-label="EchoWall Instagram">Instagram</a>
+        </div>
+
+        <div style="margin-top:.6rem" class="small muted">© <span id="year"></span> USTP EchoWall — Student-only platform</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login/Signup Modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h3 id="modalTitle">Contribute to EchoWall</h3>
+          <div class="small muted">Sign in with your USTP account to upload documents and post advice.</div>
+        </div>
+        <button class="close-btn" id="closeModal" aria-label="Close modal">✕</button>
+      </div>
+
+      <form id="loginForm" onsubmit="return loginSubmit(event)" style="margin-top:.8rem">
+        <div class="form-row">
+          <input type="email" id="email" placeholder="USTP Email (e.g. student@ustp.edu.ph)" required aria-label="USTP email">
+          <input type="password" id="password" placeholder="Password" required aria-label="Password">
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:.5rem;margin-top:.6rem">
+          <button type="button" class="btn secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn">Sign in</button>
+        </div>
+      </form>
+
+      <div class="small muted" style="margin-top:.6rem">
+        Note: This is a demo landing page. Real authentication would connect to USTP's student identity provider.
+      </div>
+    </div>
+  </div>
+
+  <!-- Placeholder scripts for interactivity -->
+  <script>
+    // Accessibility helpers
+    function scrollToId(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.scrollIntoView({behavior:'smooth',block:'start'});
+      el.focus && el.focus();
+    }
+
+    // Demo data for documents and posts
+    const sampleDocs = [
+      {id:1, title:"BSIT Data Structures Reviewer", desc:"Reviewer with solved exercises and sample problems.", course:"BSIT", prof:"Dr. Reyes", dept:"CS", downloads:482, added:"2025-09-01"},
+      {id:2, title:"BSME Thermodynamics Notes", desc:"Concise lecture notes and exam tips.", course:"BSME", prof:"Engr. Lim", dept:"CE", downloads:293, added:"2025-08-21"},
+      {id:3, title:"BSCE Calculus II Syllabus", desc:"Syllabus and recommended texts.", course:"BSCE", prof:"Prof. Santos", dept:"CE", downloads:211, added:"2025-07-11"},
+      {id:4, title:"BSIT Algorithms Cheatsheet", desc:"Big-O, traversal patterns, and reference codes.", course:"BSIT", prof:"Dr. Reyes", dept:"CS", downloads:401, added:"2025-09-07"},
+      {id:5, title:"BSME Lab Schedule Template", desc:"Editable lab schedule and rubric.", course:"BSME", prof:"Engr. Lim", dept:"CE", downloads:150, added:"2025-06-15"},
+      {id:6, title:"BSCE Structures Exam Reviewer", desc:"Past problems and worked solutions.", course:"BSCE", prof:"Prof. Santos", dept:"CE", downloads:320, added:"2025-08-02"},
+      {id:7, title:"BSA Intro to Statistics Notes", desc:"Charts and statistical tests summary.", course:"BSA", prof:"Dr. Cruz", dept:"AS", downloads:98, added:"2025-09-09"},
+      {id:8, title:"BSIT Object-Oriented Programming - Labs", desc:"Lab exercises and solutions.", course:"BSIT", prof:"Ms. Garcia", dept:"CS", downloads:270, added:"2025-09-10"}
+    ];
+
+    const samplePosts = [
+      {id:1, title:"How to survive your first week", body:"Bring a refillable bottle. Attend orientation and join orgs. Ask seniors for syllabus copies early.", author:"Ana", anon:false, category:"Freshman Tips", date:"2025-09-01"},
+      {id:2, title:"Professor Reyes exam pattern", body:"Short quizzes weekly, one big exam. Focus on practicum problems.", author:"Mark", anon:true, category:"Prof Advice", date:"2025-08-21"},
+      {id:3, title:"Dorm life essentials", body:"Earplugs, small fan, extension cords, and a good lamp. Share groceries with roommates.", author:"Liza", anon:false, category:"Dorm Life", date:"2025-09-05"},
+      {id:4, title:"Midterm survival pack", body:"Make a study schedule, join study groups, and practice past papers.", author:"Rex", anon:true, category:"Exam Survival", date:"2025-09-08"},
+      {id:5, title:"Syllabus scanning trick", body:"Scan and convert to searchable PDFs using phone app; tag by professor and course.", author:"Dina", anon:false, category:"Prof Advice", date:"2025-09-10"}
+    ];
+
+    // Insert year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Build archive grid
+    const archiveGrid = document.getElementById('archiveGrid');
+    const resultCount = document.getElementById('resultCount');
+
+    function docCardHtml(doc){
+      // Simple icon depending on course
+      const courseIcon = (doc.course || "").slice(0,3).toUpperCase();
+      return `
+        <article class="card" role="article" aria-labelledby="doc-${doc.id}-title" tabindex="0">
+          <div class="doc-thumb" aria-hidden="true">${courseIcon}</div>
+          <h4 id="doc-${doc.id}-title" class="doc-title">${escapeHtml(doc.title)}</h4>
+          <p class="doc-desc">${escapeHtml(doc.desc)}</p>
+          <div class="meta">
+            <div class="small muted">${escapeHtml(doc.course)} • ${escapeHtml(doc.prof)}</div>
+            <div class="small muted">${escapeHtml(doc.added)}</div>
+          </div>
+          <div style="margin-top:.6rem;display:flex;justify-content:space-between;align-items:center">
+            <div class="doc-actions">
+              <button class="pill" aria-label="Download ${escapeHtml(doc.title)}">Download</button>
+              <button class="pill" aria-label="View ${escapeHtml(doc.title)}">Preview</button>
+            </div>
+            <div class="small muted">⬇ ${doc.downloads}</div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderDocs(filterTab = 'top', filters = {}){
+      let docs = [...sampleDocs];
+
+      // Apply filters
+      if(filters.course) docs = docs.filter(d=>d.course === filters.course);
+      if(filters.prof) docs = docs.filter(d=>d.prof === filters.prof);
+      if(filters.dept) docs = docs.filter(d=>d.dept === filters.dept);
+
+      // Apply search
+      const q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      if(q) docs = docs.filter(d => (d.title + ' ' + d.desc + ' ' + d.course).toLowerCase().includes(q));
+
+      // Tab sorting
+      if(filterTab === 'top') {
+        docs.sort((a,b)=> b.downloads - a.downloads);
+      } else {
+        docs.sort((a,b)=> new Date(b.added) - new Date(a.added));
+      }
+
+      // Limit to 9 for preview
+      const display = docs.slice(0,9);
+      archiveGrid.innerHTML = display.map(docCardHtml).join('');
+      resultCount.textContent = display.length;
+    }
+
+    // Escape helper to prevent HTML injection in this demo
+    function escapeHtml(str){
+      if(!str) return '';
+      return String(str).replace(/[&<>"']/g, function (s) {
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]);
+      });
+    }
+
+    // Tabs in archive
+    document.querySelectorAll('#archive .tab').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        document.querySelectorAll('#archive .tab').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        renderDocs(tab, {
+          course: document.getElementById('filterCourse').value,
+          prof: document.getElementById('filterProfessor').value,
+          dept: document.getElementById('filterDept').value
+        });
+      });
+    });
+
+    // Filters
+    ['filterCourse','filterProfessor','filterDept'].forEach(id=>{
+      document.getElementById(id).addEventListener('change', ()=>{
+        const activeTabEl = document.querySelector('#archive .tab.active') || document.querySelector('#archive .tab');
+        renderDocs(activeTabEl && activeTabEl.dataset.tab || 'top', {
+          course: document.getElementById('filterCourse').value,
+          prof: document.getElementById('filterProfessor').value,
+          dept: document.getElementById('filterDept').value
+        });
+      });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', ()=>{
+      const activeTabEl = document.querySelector('#archive .tab.active') || document.querySelector('#archive .tab');
+      renderDocs(activeTabEl && activeTabEl.dataset.tab || 'top', {
+        course: document.getElementById('filterCourse').value,
+        prof: document.getElementById('filterProfessor').value,
+        dept: document.getElementById('filterDept').value
+      });
+    });
+
+    // Initial render
+    renderDocs('top', {});
+
+    // Experience carousel
+    const carouselInner = document.getElementById('carouselInner');
+    let carouselIndex = 0;
+    let displayedPosts = [...samplePosts];
+
+    function postHtml(post){
+      const avatar = post.anon ? 'A' : (post.author ? post.author[0].toUpperCase() : 'S');
+      const authorLabel = post.anon ? 'Anonymous' : escapeHtml(post.author);
+      return `
+        <div class="post" data-category="${escapeHtml(post.category)}" role="group" aria-label="${escapeHtml(post.title)}">
+          <div class="avatar" aria-hidden="true">${avatar}</div>
+          <div class="post-body">
+            <h4>${escapeHtml(post.title)}</h4>
+            <p>${escapeHtml(post.body)}</p>
+            <div class="post-meta small muted">${authorLabel} • ${escapeHtml(post.date)} • ${escapeHtml(post.category)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCarousel(){
+      if(displayedPosts.length === 0){
+        carouselInner.innerHTML = '<div class="small muted center">No posts yet — be the first to share!</div>';
+        return;
+      }
+      carouselIndex = Math.max(0, Math.min(carouselIndex, displayedPosts.length - 1));
+      const current = displayedPosts[carouselIndex];
+      carouselInner.innerHTML = postHtml(current);
+      // set focus to inner for screen reader
+      carouselInner.querySelector('.post')?.setAttribute('tabindex','0');
+    }
+    renderCarousel();
+
+    document.getElementById('prevBtn').addEventListener('click', ()=>{
+      carouselIndex = (carouselIndex - 1 + displayedPosts.length) % Math.max(1,displayedPosts.length);
+      renderCarousel();
+    });
+    document.getElementById('nextBtn').addEventListener('click', ()=>{
+      carouselIndex = (carouselIndex + 1) % Math.max(1,displayedPosts.length);
+      renderCarousel();
+    });
+
+    // Post submit
+    function submitPost(e){
+      e.preventDefault();
+      const title = document.getElementById('postTitle').value.trim();
+      const body = document.getElementById('postBody').value.trim();
+      const cat = document.getElementById('postCategory').value;
+      const anon = document.getElementById('postAnon').checked;
+      if(!title || !body) return false;
+
+      const newPost = {
+        id: Date.now(),
+        title,
+        body,
+        author: anon ? null : 'You (demo)',
+        anon,
+        category: cat,
+        date: new Date().toISOString().slice(0,10)
+      };
+      // Prepend to displayedPosts and global posts
+      samplePosts.unshift(newPost);
+      displayedPosts = [...samplePosts];
+      carouselIndex = 0;
+      renderCarousel();
+
+      // simple success feedback
+      alert('Thanks — your post is live on the Experience Wall (demo)!');
+
+      resetPostForm();
+      return false;
+    }
+
+    function resetPostForm(){
+      document.getElementById('postForm').reset();
+    }
+
+    // Filter posts by category
+    function filterPosts(category){
+      displayedPosts = category ? samplePosts.filter(p => p.category === category) : [...samplePosts];
+      carouselIndex = 0;
+      renderCarousel();
+    }
+
+    // Packs
+    const packsGrid = document.getElementById('packsGrid');
+    const starterPacks = [
+      {program:'BSIT', items:['Sample Syllabus - OOP', 'Data Structures Reviewer', 'Top Prof Tips', '3 Past Quizzes']},
+      {program:'BSME', items:['Thermo Sample Syllabus', 'Lab Safety Checklist', 'Exam Review Bundle']},
+      {program:'BSCE', items:['Calculus II Syllabus', 'Structures Reviewer', 'Fieldwork Tips']},
+      {program:'BSA', items:['Intro Stats Syllabus','Data Analysis Reviewer']},
+      {program:'BSIT (Network)', items:['Networking Lab Guides','Packet Tracer Exercises']},
+      {program:'BSME (Design)', items:['CAD Starter Files','Problem Sets']}
+    ];
+
+    function renderPacks(){
+      packsGrid.innerHTML = starterPacks.map(pack => `
+        <article class="pack" role="article" aria-labelledby="pack-${pack.program}">
+          <h4 id="pack-${pack.program}">${escapeHtml(pack.program)}</h4>
+          <p class="small muted">Curated bundle with sample syllabi, reviewers, and advice posts.</p>
+          <ul class="bundle-list" aria-label="${escapeHtml(pack.program)} contents">
+            ${pack.items.map(i => `<li>• ${escapeHtml(i)}</li>`).join('')}
+          </ul>
+          <div style="margin-top:.6rem;display:flex;justify-content:space-between;align-items:center">
+            <div class="small muted">Updated: Sep 2025</div>
+            <button class="btn small" aria-label="Download ${escapeHtml(pack.program)} pack">Get Pack</button>
+          </div>
+        </article>
+      `).join('');
+    }
+    renderPacks();
+
+    // Modal login
+    const modal = document.getElementById('modal');
+    document.getElementById('openLogin').addEventListener('click', openModal);
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e)=> { if(e.target === modal) closeModal(); });
+
+    function openModal(){
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.getElementById('email').focus();
+    }
+    function closeModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+    function loginSubmit(e){
+      e.preventDefault();
+      // Demo: simulate login success
+      alert('Demo sign-in successful. In production this would authenticate your USTP account.');
+      closeModal();
+      return false;
+    }
+
+    // Basic keyboard navigation (carousel)
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowLeft'){
+        document.getElementById('prevBtn').click();
+      } else if(e.key === 'ArrowRight'){
+        document.getElementById('nextBtn').click();
+      } else if(e.key === 'Escape'){
+        closeModal();
+      }
+    });
+
+    // Small accessibility improvement: ensure links and interactive elements have focus styles
+    document.querySelectorAll('button, [role="button"], a').forEach(el=>{
+      el.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter') el.click();
+      });
+    });
+
+    // Provide a reachable demo of downloading (no real files in demo)
+    document.addEventListener('click', function(e){
+      if(e.target && e.target.matches('.pill')){
+        if(e.target.innerText.toLowerCase().includes('download')){
+          e.preventDefault();
+          alert('Download queued (demo). In production this would start a file download.');
+        } else if(e.target.innerText.toLowerCase().includes('preview')){
+          e.preventDefault();
+          alert('Preview opened (demo). In production this would show a document viewer.');
+        }
+      }
+    });
+
+    // Ensure focus outlines for keyboard users
+    (function addKeyboardFocusClass(){
+      let mouseUsed = false;
+      window.addEventListener('mousedown', ()=> mouseUsed = true);
+      window.addEventListener('keydown', (e)=>{
+        if(e.key === 'Tab') {
+          document.body.classList.add('user-is-tabbing');
+        }
+      });
+    })();
+
+    // End of demo JS
+  </script>
+
+  <!-- Notes for implementer (invisible to users) -->
+  <!--
+    Implementation notes (keep with code):
+    - This is a front-end demo landing page. For production:
+      * Replace placeholder images and links with real USTP assets.
+      * Integrate authentication using USTP SSO (for contributor verification).
+      * Store uploaded documents on a secure server with access control.
+      * Implement moderation and content reporting features.
+      * Link the 'academic honesty policy' to the real USTP policy URL.
+      * Add server-side pagination and performance optimizations when data grows.
+    - Accessibility: headings, ARIA roles, keyboard navigation and focus states are included.
+    - Mobile-first CSS, responsive grid and stack rules applied for <640px devices.
+  -->
+
+</body>
+</html>
