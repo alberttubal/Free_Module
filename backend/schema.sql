@@ -18,7 +18,9 @@ CREATE TABLE IF NOT EXISTS courses (
 CREATE TABLE IF NOT EXISTS subjects (
     id SERIAL PRIMARY KEY,
     course_id INT REFERENCES courses(id) ON DELETE CASCADE,
-    subject_name VARCHAR(200) NOT NULL
+    subject_name VARCHAR(200) NOT NULL,
+    CONSTRAINT uq_course_subject UNIQUE (course_id, subject_name)
+
 );
 
 -- NOTES
@@ -28,16 +30,16 @@ CREATE TABLE IF NOT EXISTS notes (
     subject_id INT REFERENCES subjects(id) ON DELETE SET NULL,
     title VARCHAR(200) NOT NULL,
     description TEXT,
-    file_url TEXT NOT NULL,
+    file_url TEXT, -- nullable now
     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- RATINGS (likes)
+-- RATINGS (numeric 1–5)
 CREATE TABLE IF NOT EXISTS ratings (
     id SERIAL PRIMARY KEY,
     note_id INT REFERENCES notes(id) ON DELETE CASCADE,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    rating BOOLEAN DEFAULT TRUE,
+    rating SMALLINT CHECK (rating BETWEEN 1 AND 5),
     UNIQUE (note_id, user_id)
 );
 
@@ -83,3 +85,9 @@ CREATE TABLE IF NOT EXISTS qa_answers (
     answer TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- INDEXES
+CREATE INDEX IF NOT EXISTS idx_notes_user_id ON notes(user_id);
+CREATE INDEX IF NOT EXISTS idx_notes_subject_id ON notes(subject_id);
+CREATE INDEX IF NOT EXISTS idx_notes_upload_date ON notes(upload_date);
+CREATE INDEX IF NOT EXISTS idx_comments_note_id ON comments(note_id);

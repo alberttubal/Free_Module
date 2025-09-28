@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+npm-debug.log
 
 # Build output
 .next/
@@ -24,6 +25,9 @@ pnpm-debug.log*
 Thumbs.db
 .vscode/
 .idea/
+.next
+dist
+upload
 
 # Optional: lock files (keep if you want reproducible installs)
 # package-lock.json
