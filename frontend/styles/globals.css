@@ -1,6 +1,3 @@
-@import "tailwindcss";
-
-
 /* styles/globals.css */
 :root {
   --ustp-blue: #002147;
@@ -147,12 +144,3 @@ footer {
 footer a { color: var(--ustp-gold); margin-right: 1rem; }
 footer .links { margin-bottom: 1rem; }
 footer .disclaimer { font-size: .8rem; color: #ddd; }
-
-input {
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  border: 1px solid #ccc;
-  border-radius: var(--radius);
-}
