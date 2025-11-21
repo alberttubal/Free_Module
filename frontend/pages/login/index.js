@@ -71,7 +71,7 @@ export default function AuthPrototype() {
 
             <div className="mt-6">
               <h2 className="text-3xl font-extrabold leading-tight">Welcome to Free Module</h2>
-              <p className="mt-3 text-slate-200/80">High-fidelity sign-in and sign-up prototype with simulated interactions and error states.</p>
+              <p className="mt-3 text-slate-200/80">EXPERIENCE BEING A TRAILBLAZER</p>
             </div>
 
             <div className="mt-auto grid gap-3">
@@ -79,7 +79,7 @@ export default function AuthPrototype() {
                 onClick={() => setCurrentView('signup')}
                 className="bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full shadow hover:bg-yellow-300 transition"
               >
-                Try the Sign-Up flow
+                Sign-Up flow
               </button>
               <button
                 onClick={() => setCurrentView('login')}
