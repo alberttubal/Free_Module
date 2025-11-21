@@ -339,6 +339,10 @@ app.get("/notes/:id/ratings", async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.send("Server is running!");
+});
+
 const server = app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
