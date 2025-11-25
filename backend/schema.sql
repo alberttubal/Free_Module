@@ -39,7 +39,6 @@ CREATE TABLE IF NOT EXISTS ratings (
     id SERIAL PRIMARY KEY,
     note_id INT REFERENCES notes(id) ON DELETE CASCADE,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    rating SMALLINT CHECK (rating BETWEEN 1 AND 5),
     UNIQUE (note_id, user_id)
 );
 
