@@ -1,0 +1,37 @@
+backend/
+├── .env
+├── .env.example
+├── .gitignore
+├── db.js
+├── server.js
+├── package.json
+├── package-lock.json
+├── schema.sql
+│
+├── middleware/
+│   ├── auth.js
+│   ├── checkNoteExists.js
+│   ├── rateLimiters.js
+│   └── validators.js
+│
+├── routes/
+│   ├── auth.js
+│   ├── comments.js
+│   ├── courses.js
+│   ├── experience.js
+│   ├── notes.js
+│   ├── qa.js
+│   ├── ratings.js
+│   ├── subjects.js
+│   ├── survival.js
+│   ├── users.js
+│   └── uploads.js
+│
+├── uploads/                  
+│   └── (uploaded PDFs & images)
+│
+├── node_modules/  
+│
+└── utils/
+    ├── sanitize.js
+    └── uploads.js
