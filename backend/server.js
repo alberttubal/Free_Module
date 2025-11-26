@@ -68,16 +68,24 @@ try {
 app.use("/uploads", express.static(uploadsDir));
 
 // ================= ROUTES MOUNTING ==================
-app.use("/auth", authRoutes);        // Auth (signup, login, etc.)
-app.use("/comments", commentRoutes); // Comments CRUD
-app.use("/courses", coursesRoutes);  // Courses CRUD
-app.use("/notes", notesRoutes);      // Notes CRUD
-app.use("/notes", ratingsRoutes);    // Ratings nested under notes (like/unlike, counts)
-app.use("/qa", qaRoutes);            // Q&A posts CRUD
-app.use("/subjects", subjectsRoutes);// Subjects CRUD
-app.use("/users", require("./routes/users")); // User profile routes
+app.use("/auth", authRoutes);
+app.use("/courses", coursesRoutes);
+app.use("/subjects", subjectsRoutes);
+app.use("/qa", qaRoutes);
+app.use("/users", require("./routes/users"));
 
+// NOTES + NESTED FEATURES
+app.use("/notes", notesRoutes);
+app.use("/notes", ratingsRoutes);
+app.use("/notes", commentRoutes);
 
+// EXPERIENCE & SURVIVAL — NOW MOUNTED! 
+const experienceRoutes = require("./routes/experience");
+const survivalRoutes = require("./routes/survival");
+app.use("/experience", experienceRoutes);
+app.use("/survival", survivalRoutes);
+const qaAnswersRoutes = require("./routes/qa-answers");
+app.use("/qa", qaAnswersRoutes); 
 // =====================================================
 // ================ START SERVER =======================
 // =====================================================

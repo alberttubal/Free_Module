@@ -1,3 +1,4 @@
+// backend/routes/ratings.js
 const express = require("express");
 const pool = require("../db");
 const { actionLimiter } = require("../middleware/rateLimiters");
@@ -8,9 +9,9 @@ const checkNoteExists = require("../middleware/checkNoteExists");
 
 const router = express.Router();
 
-// ==================== RATINGS (LIKE / UNLIKE) ====================
+// ==================== LIKE / UNLIKE ====================
 router.post(
-  "/:id/rate",
+  "/:id/like",                                 // ← CHANGED FROM /rate TO /like
   actionLimiter,
   param("id").isInt({ min: 1 }).withMessage("Note ID must be a positive integer"),
   (req, res, next) => {
@@ -31,7 +32,6 @@ router.post(
       );
 
       if (existing.length > 0) {
-        // Unlike
         await pool.query(
           "DELETE FROM ratings WHERE note_id = $1 AND user_id = $2",
           [noteId, user_id]
@@ -39,7 +39,6 @@ router.post(
         return res.json({ action: "unliked" });
       }
 
-      // Like
       const { rows } = await pool.query(
         "INSERT INTO ratings (note_id, user_id) VALUES ($1, $2) RETURNING id",
         [noteId, user_id]
@@ -47,15 +46,15 @@ router.post(
 
       res.status(201).json({ action: "liked", rating_id: rows[0].id });
     } catch (err) {
-      console.error("Rate note error:", err);
-      res.status(500).json({ error: "Failed to like/unlike note" });
+      console.error("Like error:", err);
+      res.status(500).json({ error: "Failed to like note" });
     }
   }
 );
 
-// ==================== GET LIKE COUNT ====================
+// ==================== GET LIKES ====================
 router.get(
-  "/:id/ratings",
+  "/:id/likes",                                // ← CHANGED FROM /ratings TO /likes
   param("id").isInt({ min: 1 }).withMessage("Note ID must be a positive integer"),
   (req, res, next) => {
     const errors = validationResult(req);
@@ -69,10 +68,7 @@ router.get(
     const offset = parseInt(req.query.offset) || 0;
 
     try {
-      const countRes = await pool.query(
-        "SELECT COUNT(*) FROM ratings WHERE note_id = $1",
-        [id]
-      );
+      const countRes = await pool.query("SELECT COUNT(*) FROM ratings WHERE note_id = $1", [id]);
       const total = parseInt(countRes.rows[0].count);
 
       const usersRes = await pool.query(
@@ -91,8 +87,8 @@ router.get(
         pagination: { limit, offset, total },
       });
     } catch (err) {
-      console.error("Fetch ratings error:", err);
-      res.status(500).json({ error: err.message });
+      console.error("Fetch likes error:", err);
+      res.status(500).json({ error: "Failed to fetch likes" });
     }
   }
 );

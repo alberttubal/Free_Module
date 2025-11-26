@@ -72,29 +72,31 @@ router.post(
 
 // ==================== LIST NOTES ====================
 router.get("/", async (req, res) => {
-  const limit = parseInt(req.query.limit) || 20;
-  const offset = parseInt(req.query.offset) || 0;
-  const subjectFilter = req.query.subject_id || null;
+  const limit = parseInt(req.query.limit, 10) || 20;
+  const offset = parseInt(req.query.offset, 10) || 0;
+  const subjectFilter = req.query.subject_id ? parseInt(req.query.subject_id, 10) : null;
 
   try {
     let query = `
       SELECT 
         n.*,
         u.name AS uploader_name,
-        (SELECT COUNT(*) FROM ratings r WHERE r.note_id = n.id) AS likes,
-        (SELECT COUNT(*) FROM comments c WHERE c.note_id = n.id) AS comments
+        COALESCE((SELECT COUNT(*) FROM ratings r WHERE r.note_id = n.id), 0) AS likes,
+        COALESCE((SELECT COUNT(*) FROM comments c WHERE c.note_id = n.id), 0) AS comments_count
       FROM notes n
       JOIN users u ON n.user_id = u.id
     `;
 
     const params = [];
+    let paramIndex = 1;
+
     if (subjectFilter) {
-      query += ` WHERE n.subject_id = $1 ORDER BY n.created_at DESC LIMIT $2 OFFSET $3`;
-      params.push(subjectFilter, limit, offset);
-    } else {
-      query += ` ORDER BY n.created_at DESC LIMIT $1 OFFSET $2`;
-      params.push(limit, offset);
+      query += ` WHERE n.subject_id = $${paramIndex++}`;
     }
+
+    query += ` ORDER BY n.upload_date DESC`;
+    query += ` LIMIT $${paramIndex++} OFFSET $${paramIndex++}`;
+    params.push(...(subjectFilter ? [subjectFilter] : []), limit, offset);
 
     const result = await pool.query(query, params);
 
@@ -107,7 +109,7 @@ router.get("/", async (req, res) => {
       }))
     );
   } catch (err) {
-    console.error("List notes error:", err);
+    console.error("List notes error:", err.message);
     res.status(500).json({ error: "Failed to fetch notes" });
   }
 });

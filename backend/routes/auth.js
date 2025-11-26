@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { body, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const pool = require("../db");
 const { loginLimiter, signupLimiter } = require("../middleware/rateLimiters");
 const { signupValidators, loginValidators } = require("../middleware/validators");
@@ -10,25 +10,11 @@ const sanitize = require("../utils/sanitize"); // ✅ import sanitize
 const router = express.Router();
 const SECRET = process.env.JWT_SECRET;
 
-// ==================== SIGNUP ====================
+// ==================== REGISTER ====================
 router.post(
-  "/signup",
+  "/register",              // ✅ use /register instead of /signup
   signupLimiter,
-  signupValidators,
-  [
-    body("name").trim().isLength({ min: 2 }).withMessage("Name must be at least 2 characters"),
-    body("email")
-      .trim()
-      .isEmail().withMessage("Valid email required")
-      .custom((value) => {
-        if (!value.endsWith("@ustp.edu.ph")) throw new Error("Must use USTP email");
-        return true;
-      })
-      .normalizeEmail(),
-    body("password")
-      .trim()
-      .isLength({ min: 8 }).withMessage("Password must be at least 8 characters"),
-  ],
+  signupValidators,         // ✅ only this, no manual body() rules
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -46,9 +32,9 @@ router.post(
       );
       res.status(201).json(rows[0]);
     } catch (err) {
-      console.error("Signup error:", err);
+      console.error("Register error:", err);
       if (err.code === "23505") return res.status(409).json({ error: "Email already in use" });
-      res.status(500).json({ error: "Signup failed" });
+      res.status(500).json({ error: "Registration failed" });
     }
   }
 );
@@ -57,11 +43,7 @@ router.post(
 router.post(
   "/login",
   loginLimiter,
-  loginValidators,
-  [
-    body("email").trim().isEmail().withMessage("Valid email required").normalizeEmail(),
-    body("password").trim().notEmpty().withMessage("Password required"),
-  ],
+  loginValidators,          // ✅ keep validators centralized
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -87,4 +69,4 @@ router.post(
   }
 );
 
-module.exports = router; // ✅ export the router, not validators
+module.exports = router; // ✅ export router only
