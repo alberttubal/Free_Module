@@ -33,7 +33,7 @@ router.get(
 
     try {
       const { rows } = await pool.query(
-        `SELECT id, course_id, subject_name, created_at
+        `SELECT id, course_id, subject_name
          FROM subjects
          ORDER BY subject_name ASC
          LIMIT $1 OFFSET $2`,
@@ -42,8 +42,7 @@ router.get(
       const items = rows.map(r => ({
         id: r.id,
         course_id: r.course_id,
-        subject_name: xss(r.subject_name),
-        created_at: r.created_at
+        subject_name: xss(r.subject_name)
       }));
       res.json({ items, limit, offset });
     } catch (err) {
@@ -71,7 +70,7 @@ router.get(
     try {
       const { course_id } = req.params;
       const { rows } = await pool.query(
-        `SELECT id, course_id, subject_name, created_at
+        `SELECT id, course_id, subject_name
          FROM subjects
          WHERE course_id = $1
          ORDER BY subject_name ASC
@@ -81,8 +80,7 @@ router.get(
       const items = rows.map(r => ({
         id: r.id,
         course_id: r.course_id,
-        subject_name: xss(r.subject_name),
-        created_at: r.created_at
+        subject_name: xss(r.subject_name)
       }));
       res.json({ items, limit, offset });
     } catch (err) {
@@ -102,7 +100,7 @@ router.get(
     try {
       const { id } = req.params;
       const { rows } = await pool.query(
-        `SELECT id, course_id, subject_name, created_at
+        `SELECT id, course_id, subject_name
          FROM subjects
          WHERE id = $1`,
         [id]
@@ -114,8 +112,7 @@ router.get(
       res.json({
         id: r.id,
         course_id: r.course_id,
-        subject_name: xss(r.subject_name),
-        created_at: r.created_at
+        subject_name: xss(r.subject_name)
       });
     } catch (err) {
       console.error("Fetch subject error:", err);
@@ -141,15 +138,14 @@ router.post(
       const { rows } = await pool.query(
         `INSERT INTO subjects (course_id, subject_name)
          VALUES ($1, $2)
-         RETURNING id, course_id, subject_name, created_at`,
+         RETURNING id, course_id, subject_name`,
         [course_id, subject_name]
       );
       const r = rows[0];
       res.status(201).json({
         id: r.id,
         course_id: r.course_id,
-        subject_name: xss(r.subject_name),
-        created_at: r.created_at
+        subject_name: xss(r.subject_name)
       });
     } catch (err) {
       if (err.code === "23505") {
@@ -205,7 +201,7 @@ router.put(
         `UPDATE subjects
          SET ${updates.join(", ")}
          WHERE id = $${i}
-         RETURNING id, course_id, subject_name, created_at`,
+         RETURNING id, course_id, subject_name`,
         values
       );
 
@@ -217,8 +213,7 @@ router.put(
       res.json({
         id: r.id,
         course_id: r.course_id,
-        subject_name: xss(r.subject_name),
-        created_at: r.created_at
+        subject_name: xss(r.subject_name)
       });
     } catch (err) {
       if (err.code === "23505") {
@@ -246,7 +241,7 @@ router.delete(
       const { rows } = await pool.query(
         `DELETE FROM subjects
          WHERE id = $1
-         RETURNING id, course_id, subject_name, created_at`,
+         RETURNING id, course_id, subject_name`,
         [id]
       );
       if (rows.length === 0) {
@@ -258,8 +253,7 @@ router.delete(
         deleted: {
           id: r.id,
           course_id: r.course_id,
-          subject_name: xss(r.subject_name),
-          created_at: r.created_at
+          subject_name: xss(r.subject_name)
         }
       });
     } catch (err) {

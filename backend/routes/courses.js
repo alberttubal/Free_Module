@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      `SELECT id, course_code, course_name, created_at
+      `SELECT id, course_code, course_name
        FROM courses
        ORDER BY course_code ASC
        LIMIT $1 OFFSET $2`,
@@ -46,7 +46,7 @@ router.get(
     try {
       const { id } = req.params;
       const { rows } = await pool.query(
-        `SELECT id, course_code, course_name, created_at
+        `SELECT id, course_code, course_name
          FROM courses
          WHERE id = $1`,
         [id]
@@ -79,7 +79,7 @@ router.post(
       const { rows } = await pool.query(
         `INSERT INTO courses (course_code, course_name)
          VALUES ($1, $2)
-         RETURNING id, course_code, course_name, created_at`,
+         RETURNING id, course_code, course_name`,
         [course_code, course_name]
       );
       res.status(201).json(rows[0]);
@@ -132,7 +132,7 @@ router.put(
       values.push(id);
       const { rows } = await pool.query(
         `UPDATE courses SET ${updates.join(", ")} WHERE id = $${i}
-         RETURNING id, course_code, course_name, created_at`,
+         RETURNING id, course_code, course_name`,
         values
       );
 
@@ -163,7 +163,7 @@ router.delete(
     try {
       const { rows } = await pool.query(
         `DELETE FROM courses WHERE id = $1
-         RETURNING id, course_code, course_name, created_at`,
+         RETURNING id, course_code, course_name`,
         [id]
       );
       if (rows.length === 0) {
