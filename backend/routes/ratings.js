@@ -1,94 +1,108 @@
-// backend/routes/ratings.js
+// routes/ratings.js
 const express = require("express");
 const pool = require("../db");
 const { actionLimiter } = require("../middleware/rateLimiters");
-const { param } = require("express-validator");
-const { validationResult } = require("express-validator");
 const authMiddleware = require("../middleware/auth");
 const checkNoteExists = require("../middleware/checkNoteExists");
+const { query, validationResult } = require("express-validator");
+const xss = require("xss");
 
 const router = express.Router();
 
-// ==================== LIKE / UNLIKE ====================
+function sendValidation(req, res) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({ error: { code: "VALIDATION", details: errors.array() } });
+    return true;
+  }
+  return false;
+}
+
+// ==================== RATINGS (LIKE / UNLIKE) ====================
 router.post(
-  "/:id/like",                                 // ← CHANGED FROM /rate TO /like
+  "/:id/rate",
   actionLimiter,
-  param("id").isInt({ min: 1 }).withMessage("Note ID must be a positive integer"),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-    next();
-  },
   authMiddleware,
   checkNoteExists,
   async (req, res) => {
-    const noteId = parseInt(req.params.id, 10);
+    const noteId = req.note.id;
     const user_id = req.user.id;
 
     try {
-      const { rows: existing } = await pool.query(
-        "SELECT 1 FROM ratings WHERE note_id = $1 AND user_id = $2",
+      // Toggle: try delete first; if nothing deleted, insert
+      const delRes = await pool.query(
+        "DELETE FROM ratings WHERE note_id = $1 AND user_id = $2 RETURNING id",
         [noteId, user_id]
       );
-
-      if (existing.length > 0) {
-        await pool.query(
-          "DELETE FROM ratings WHERE note_id = $1 AND user_id = $2",
-          [noteId, user_id]
+      if (delRes.rowCount > 0) {
+        // Return updated count
+        const { rows: countRows } = await pool.query(
+          "SELECT COUNT(*)::int AS count FROM ratings WHERE note_id = $1",
+          [noteId]
         );
-        return res.json({ action: "unliked" });
+        return res.json({ action: "unliked", total_likes: countRows[0].count });
       }
 
-      const { rows } = await pool.query(
-        "INSERT INTO ratings (note_id, user_id) VALUES ($1, $2) RETURNING id",
+      // Insert like; rely on unique constraint for safety
+      await pool.query(
+        `INSERT INTO ratings (note_id, user_id)
+         VALUES ($1, $2)
+         ON CONFLICT (note_id, user_id) DO NOTHING`,
         [noteId, user_id]
       );
 
-      res.status(201).json({ action: "liked", rating_id: rows[0].id });
+      const { rows: countRows } = await pool.query(
+        "SELECT COUNT(*)::int AS count FROM ratings WHERE note_id = $1",
+        [noteId]
+      );
+
+      return res.status(201).json({ action: "liked", total_likes: countRows[0].count });
     } catch (err) {
-      console.error("Like error:", err);
-      res.status(500).json({ error: "Failed to like note" });
+      console.error("Rate note error:", err);
+      res.status(500).json({ error: { code: "SERVER_ERROR", message: "Internal server error" } });
     }
   }
 );
 
-// ==================== GET LIKES ====================
+// ==================== GET LIKE COUNT ====================
 router.get(
-  "/:id/likes",                                // ← CHANGED FROM /ratings TO /likes
-  param("id").isInt({ min: 1 }).withMessage("Note ID must be a positive integer"),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-    next();
-  },
+  "/:id/ratings",
   checkNoteExists,
+  [
+    query("limit").optional().isInt({ min: 1 }).withMessage("limit must be a positive integer"),
+    query("offset").optional().isInt({ min: 0 }).withMessage("offset must be a non-negative integer"),
+  ],
   async (req, res) => {
-    const { id } = req.params;
-    const limit = parseInt(req.query.limit) || 20;
-    const offset = parseInt(req.query.offset) || 0;
+    if (sendValidation(req, res)) return;
+
+    const noteId = req.note.id;
+    const rawLimit = parseInt(req.query.limit, 10) || 20;
+    const limit = Math.min(rawLimit, 100);
+    const offset = parseInt(req.query.offset, 10) || 0;
 
     try {
-      const countRes = await pool.query("SELECT COUNT(*) FROM ratings WHERE note_id = $1", [id]);
-      const total = parseInt(countRes.rows[0].count);
+      const { rows: countRows } = await pool.query(
+        "SELECT COUNT(*)::int AS count FROM ratings WHERE note_id = $1",
+        [noteId]
+      );
+      const total = countRows[0].count;
 
-      const usersRes = await pool.query(
-        `SELECT u.id, u.name 
+      const { rows: users } = await pool.query(
+        `SELECT u.id, u.name
          FROM ratings r
          JOIN users u ON r.user_id = u.id
          WHERE r.note_id = $1
          ORDER BY r.id DESC
          LIMIT $2 OFFSET $3`,
-        [id, limit, offset]
+        [noteId, limit, offset]
       );
 
-      res.json({
-        likes: total,
-        users: usersRes.rows,
-        pagination: { limit, offset, total },
-      });
+      const safeUsers = users.map(u => ({ id: u.id, name: xss(u.name || "") }));
+
+      res.json({ likes: total, users: safeUsers, limit, offset });
     } catch (err) {
-      console.error("Fetch likes error:", err);
-      res.status(500).json({ error: "Failed to fetch likes" });
+      console.error("Fetch ratings error:", err);
+      res.status(500).json({ error: { code: "SERVER_ERROR", message: "Internal server error" } });
     }
   }
 );
