@@ -20,6 +20,9 @@ const qaRoutes = require("./routes/qa");
 const ratingsRoutes = require("./routes/ratings");
 const subjectsRoutes = require("./routes/subjects");
 const authMiddleware = require("./middleware/auth");
+const qaAnswersRoutes = require("./routes/qa-answers");
+const experienceRoutes = require("./routes/experience");
+const survivalRoutes = require("./routes/survival");
 
 // ===== JWT SECRET HANDLING =====
 let SECRET = process.env.JWT_SECRET;
@@ -73,19 +76,18 @@ app.use("/courses", coursesRoutes);
 app.use("/subjects", subjectsRoutes);
 app.use("/qa", qaRoutes);
 app.use("/users", require("./routes/users"));
-
+app.use("/qa", qaAnswersRoutes);
 // NOTES + NESTED FEATURES
 app.use("/notes", notesRoutes);
 app.use("/notes", ratingsRoutes);
 app.use("/notes", commentRoutes);
 
 // EXPERIENCE & SURVIVAL — NOW MOUNTED! 
-const experienceRoutes = require("./routes/experience");
-const survivalRoutes = require("./routes/survival");
+
 app.use("/experience", experienceRoutes);
 app.use("/survival", survivalRoutes);
-const qaAnswersRoutes = require("./routes/qa-answers");
-app.use("/qa", qaAnswersRoutes); 
+
+
 // =====================================================
 // ================ START SERVER =======================
 // =====================================================

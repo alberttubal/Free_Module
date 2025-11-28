@@ -6,6 +6,8 @@ const { body, validationResult, param, query } = require("express-validator");
 const xss = require("xss");
 
 const router = express.Router();
+const answersRouter = require("./qa-answers");
+
 
 // Helper to standardize validation errors
 function sendValidation(req, res) {
@@ -200,4 +202,5 @@ router.delete(
   }
 );
 
+router.use("/:postId/answers", answersRouter);
 module.exports = router;

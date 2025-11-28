@@ -6,7 +6,7 @@ const { actionLimiter } = require("../middleware/rateLimiters");
 const { body, param, query, validationResult } = require("express-validator");
 const xss = require("xss");
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 function sendValidation(req, res) {
   const errors = validationResult(req);
@@ -19,7 +19,7 @@ function sendValidation(req, res) {
 
 // POST /qa/:postId/answers → Answer a question
 router.post(
-  "/:postId/answers",
+  "/",
   authMiddleware,
   actionLimiter,
   [
@@ -58,7 +58,7 @@ router.post(
 
 // GET /qa/:postId/answers → Get all answers
 router.get(
-  "/:postId/answers",
+  "/",
   [
     param("postId").isInt({ min: 1 }).withMessage("postId must be a positive integer"),
     query("limit").optional().isInt({ min: 1 }).withMessage("limit must be a positive integer"),
