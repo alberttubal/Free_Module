@@ -1,29 +1,31 @@
 Free Module
-A Node.js + Next.js full-stack project designed to simulate a student hub platform. It provides backend APIs for authentication, notes sharing, courses/subjects, ratings, comments, Q&A, survival guides, and an experience wall, alongside a Next.js frontend for interaction.
+A full-stack Node.js + Next.js project simulating a student hub platform. It provides backend APIs for user authentication, notes sharing, course/subject management, ratings, comments, Q&A, survival guides, and an experience wall, complemented by a Next.js frontend for seamless interaction.
 
 🚀 Features
+
 Authentication: JWT-based login, registration, and user management.
 
-Notes Sharing: Upload study notes (PDF/DOC/PPT), view, comment, and rate.
+Notes Sharing: Upload, view, comment on, and rate study materials (PDF/DOC/PPT).
 
-Courses & Subjects: Structured course and subject management.
+Courses & Subjects: Organize and manage courses and subjects.
 
-Experience Wall: Post and view experiences with optional images.
+Experience Wall: Share and view student experiences with optional images.
 
-Q&A: Ask questions and provide answers (Ask Upperclassmen).
+Q&A: Ask questions and receive answers (Ask Upperclassmen).
 
-Survival Guides: Read-only guides for freshmen.
+Survival Guides: Access read-only guides for freshmen.
 
 Comments & Ratings: Engage with notes through comments and ratings.
 
-Security: Input validation, sanitization, rate limiting, and Helmet headers.
+Security: Input validation, sanitization, rate limiting, and Helmet headers for enhanced security.
 
 🛠️ Tech Stack
+
 Backend: Node.js, Express, PostgreSQL
 
 Frontend: Next.js (React, Tailwind CSS)
 
-Middleware: JWT auth, validators, rate limiters
+Middleware: JWT Authentication, validators, rate limiters
 
 Utilities: Multer (file uploads), XSS sanitization
 
@@ -31,25 +33,43 @@ Languages: TypeScript, JavaScript, CSS, HTML
 
 ⚙️ Setup Instructions
 Prerequisites
+
 Node.js v18+ (LTS recommended)
+
 npm or yarn
+
 PostgreSQL database
 
 Installation
+
+Clone the repository:
 git clone https://github.com/alberttubal/Free_Module.git
+
+Navigate to the project folder:
 cd Free_Module
+
+Install dependencies:
 npm install
 
-Backend Simulation
+Backend Setup
+
+Navigate to the backend directory:
 cd backend
+
+Start the server:
 node server.js
 
-Frontend Simulation
+Frontend Setup
+
+Navigate to the frontend directory:
 cd frontend
+
+Start the development server:
 npm run dev
 
 🌐 Environment Variables
-Create a .env file in the backend directory:
+
+Create a .env file in the backend directory with the following configuration:
 PORT=4000
 JWT_SECRET=your_random_32_byte_secret
 CORS_ORIGIN=http://localhost:4000
@@ -57,82 +77,90 @@ DATABASE_URL=postgres://postgres:password@localhost:5432/free_module
 NODE_ENV=development
 DB_SSL=false
 
+PostgreSQL Database Configuration:
+
+Password: AcadFreedom123!
+
+Port: 5432
+
+Database Name: free_module
+
+Username: postgres
+
 Frontend uses:
 NEXT_PUBLIC_API_URL=http://localhost:4000/api
 
 📖 API Endpoints
-Auth
-POST /auth/register
+Authentication
 
-POST /auth/login
+POST /auth/register: User registration
 
-GET /users/me
+POST /auth/login: User login
 
-PUT /users/me
+GET /users/me: Get current user details
 
-DELETE /users/me
+PUT /users/me: Update current user details
+
+DELETE /users/me: Delete user account
 
 Notes
-POST /notes/upload
 
-GET /notes
+POST /notes/upload: Upload study notes
 
-POST /notes/:id/rate
+GET /notes: Retrieve all notes
 
-GET /notes/:id/comments
+POST /notes/:id/rate: Rate a note
 
-POST /notes/:id/comments
+GET /notes/:id/comments: View comments on a note
 
-DELETE /notes/:id/comments/:commentId
+POST /notes/:id/comments: Add a comment to a note
+
+DELETE /notes/:id/comments/:commentId: Delete a comment
 
 Courses & Subjects
-GET /courses
 
-GET /subjects
+GET /courses: Retrieve all courses
 
-GET /subjects/course/:course_id
+GET /subjects: Retrieve all subjects
+
+GET /subjects/course/:course_id: Get subjects for a specific course
 
 Experience Wall
-POST /experience
 
-GET /experience
+POST /experience: Post an experience
 
-GET /experience/:id
+GET /experience: Retrieve all experiences
 
-PUT /experience/:id
+GET /experience/:id: Get a specific experience
 
-DELETE /experience/:id
+PUT /experience/:id: Update an experience
+
+DELETE /experience/:id: Delete an experience
 
 Q&A
-POST /qa
 
-GET /qa
+POST /qa: Ask a question
 
-PUT /qa/:id
+GET /qa: Retrieve all questions
 
-DELETE /qa/:id
+PUT /qa/:id: Update a question
 
-POST /qa/:postId/answers
+DELETE /qa/:id: Delete a question
 
-GET /qa/:postId/answers
+POST /qa/:postId/answers: Provide an answer to a question
+
+GET /qa/:postId/answers: Retrieve answers to a question
 
 Survival Guides
-GET /survival
 
-GET /survival/:id
+GET /survival: Retrieve all survival guides
+
+GET /survival/:id: Retrieve a specific survival guide
 
 🧪 Development Notes
-Line endings: Use LF consistently (.gitattributes enforces this).
 
-Validation: Client-side validation should mirror backend rules.
+Line Endings: Use LF consistently (enforced via .gitattributes).
 
-Uploads: Max file size 20MB.
+Validation: Ensure client-side validation matches backend rules.
 
-Error format:
-{
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Title is required",
-    "details": []
-  }
-}
+Uploads: Max file size is 20MB.
